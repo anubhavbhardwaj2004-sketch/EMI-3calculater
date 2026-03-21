@@ -6,6 +6,7 @@ import familyImage from "./assets/images/family.png";
 import AnimatedButton from './components/ui/animatedbutton';
 
 const App = () => {
+  const [ConsumerName, setConsumerName] = React.useState('')
   const [loanName, setLoanName] = React.useState('')
   const [loanAmount, setLoanAmount] = React.useState('')
   const [interestRate, setInterestRate] = React.useState('')
@@ -25,7 +26,6 @@ const App = () => {
     const p = parseFloat(loanAmount);
     const r = parseFloat(interestRate) / 12 / 100;
     const n = parseFloat(loanTenure) * 12;
-    const LoanName = loanName;
 
     if (r === 0) {
       setEmi((p / n).toFixed(2));
@@ -40,7 +40,7 @@ const App = () => {
       alert("Please enter a WhatsApp number.");
       return;
     }
-    const message = 'Your monthly EMI for ' + loanName + ' is ₹ ' + emi + 'Thanks for using EMI Calculator by Anubhav Bhardwaj';
+    const message = 'Your Name - ' + '\n' + ConsumerName + '\n' + 'monthly EMI for ' + loanName + ' is ₹ ' + emi + '\n' + 'Thanks for using EMI Calculator by Anubhav Bhardwaj';
     const url = `https://wa.me/${phoneNumber}?text=` + encodeURIComponent(message);
     window.open(url);
   }
@@ -94,6 +94,7 @@ const App = () => {
               {yourPhoto && (
                 <img src={yourPhoto} className="w-full h-48 object-cover rounded-xl mt-4 mb-2 shadow-[0_0_15px_rgba(45,212,191,0.2)]" alt="Uploaded Item" />
               )}
+              <p> Consumer Name - {ConsumerName}</p>
               <input
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all font-medium mt-4 mb-2"
                 type="number"
@@ -133,6 +134,22 @@ const App = () => {
                 }
               }}
               accept="image/*"></input>
+             <label htmlFor="ConsumerName" className="text-sm font-medium text-gray-200 block">
+              Consumer Name - {ConsumerName}
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                id="ConsumerName"
+                name="ConsumerName"
+                required
+                value={ConsumerName}
+                onChange={(e) => setConsumerName(e.target.value)}
+                placeholder="Enter Consumer Name"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all font-medium"
+              />
+            </div>
+
             <label htmlFor="loanName" className="text-sm font-medium text-gray-200 block">
               Loan Name - {loanName}
             </label>
