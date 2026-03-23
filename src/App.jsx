@@ -15,17 +15,24 @@ const App = () => {
   const [phoneNumber, setPhoneNumber] = React.useState('')
   const [itemImage, setItemImage] = React.useState(null)
   const [yourPhoto, setYourPhoto] = React.useState(null)
+  const [monthLoan, setMonthLoan] = React.useState('')
+  const [loanType, setLoanType] = React.useState('')
 
   const calculateEmi = (e) => {
     e.preventDefault();
-    if (!loanAmount || !interestRate || !loanTenure) {
+    if (!loanAmount || !interestRate || (!loanTenure && !monthLoan)) {
       alert("Please enter all the values to calculate your EMI-");
       return;
     }
 
     const p = parseFloat(loanAmount);
     const r = parseFloat(interestRate) / 12 / 100;
-    const n = parseFloat(loanTenure) * 12;
+    const n = (parseFloat(loanTenure || 0) * 12) + parseFloat(monthLoan || 0);
+
+    if (n === 0) {
+      alert("Please enter a valid loan tenure.");
+      return;
+    }
 
     if (r === 0) {
       setEmi((p / n).toFixed(2));
@@ -40,7 +47,7 @@ const App = () => {
       alert("Please enter a WhatsApp number.");
       return;
     }
-    const message = 'Your Name - ' + '\n' + ConsumerName + '\n' + 'monthly EMI for ' + loanName + ' is ₹ ' + emi + '\n' + 'Thanks for using EMI Calculator by Anubhav Bhardwaj';
+    const message = 'Your Name - ' + '\n' + ConsumerName + '\n' + 'LoanType is -' + '\n' + loanType + '\n' + 'monthly EMI for ' + loanName + '\n' + 'is ₹ ' + emi + '\n' + 'Thanks for using EMI Calculator by Anubhav Bhardwaj';
     const url = `https://wa.me/${phoneNumber}?text=` + encodeURIComponent(message);
     window.open(url);
   }
@@ -149,7 +156,28 @@ const App = () => {
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all font-medium"
               />
             </div>
-
+            <label htmlFor="loanType" className="text-sm font-medium text-gray-200 block">
+              Loan Type - {loanType}
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                id="loanType"
+                name="loanType"
+                value={loanType}
+                onChange={(e) => setLoanType(e.target.value)}
+                placeholder="Enter Loan Type"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all font-medium"
+              />
+              <ul className="flex gap-2 mt-2 flex-wrap">
+                <li className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all font-medium cursor-pointer hover:bg-white/10" onClick={() => setLoanType("Consumer Durables")}>Consumer Durables</li>
+                <li className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all font-medium cursor-pointer hover:bg-white/10" onClick={() => setLoanType("Electronics")}>Electronics</li>
+                <li className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all font-medium cursor-pointer hover:bg-white/10" onClick={() => setLoanType("Furniture")}>Furniture</li>
+                <li className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all font-medium cursor-pointer hover:bg-white/10" onClick={() => setLoanType("Other")}>Other</li>
+              </ul>
+            </div>
+          </div>
+          <div className="space-y-2">
             <label htmlFor="loanName" className="text-sm font-medium text-gray-200 block">
               Loan Name - {loanName}
             </label>
@@ -217,6 +245,22 @@ const App = () => {
               />
             </div>
           </div>
+          <div className="space-y-2">
+            <label htmlFor="monthLoan" className="text-sm font-medium text-gray-200 block">
+              Month Loan
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                id="monthLoan"
+                name="monthLoan"
+                value={monthLoan}
+                onChange={(e) => setMonthLoan(e.target.value)}
+                placeholder="e.g. 6 Months"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-400/50 transition-all font-medium"
+              />
+            </div>
+          </div>
 
           {/* Submit Button */}
           <AnimatedButton
@@ -227,7 +271,7 @@ const App = () => {
           </AnimatedButton>
         </form>
       </div>
-    </div>
+    </div> 
   )
 }
 
